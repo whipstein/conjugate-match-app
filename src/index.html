@@ -5,10 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Matching Networks</title>
-    <!-- <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"> -->
 
     <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bigger {
+        font-size: 150%;
+      }
+    </style>
   </head>
 
   <body class="bg-body-tertiary">
@@ -82,395 +85,260 @@
     </div>
 
     <section class="section">
-      <div class="container-fluid text-center">
+      <div class="container-fluid text-center justify-content-center">
         <form name="input">
 
-          <div class="row m-1">
-            <div class="col">
-              <label class="label">Number Format</label>
-              <div class="select">
-                <select id="num_format">
-                  <option value="ri" selected>Real/Imaginary</option>
-                  <option value="ma">Magnitude/Angle</option>
-                  <option value="db">dB/Angle</option>
+          <div class="row mt-5 justify-content-center">
+            <div class="col-4">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Frequency
+                  Unit</span>
+                <select class="form-select" id="freq_unit"
+                  onchange="calcMatch()" autocomplete="off">
+                  <option value="tera">THz</option>
+                  <option value="giga" selected>GHz</option>
+                  <option value="mega">MHz</option>
+                  <option value="kilo">kHz</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Cap
+                  Unit</span>
+                <select class="form-select" id="cap_unit"
+                  onchange="calcMatch()" autocomplete="off">
+                  <option value="milli">Milli</option>
+                  <option value="micro">Micro</option>
+                  <option value="nano">Nano</option>
+                  <option value="pico">Pico</option>
+                  <option value="femto" selected>Femto</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Format</span>
+                <select class="form-select" id="num_format"
+                  onchange="change_imp()" autocomplete="off">
+                  <option value="ri" selected>Re/Im</option>
+                  <option value="ma">Mag/Ang</option>
+                  <option value="db">dB/Ang</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div class="row m-3">
+          <div class="row mt-3 justify-content-center">
+            <div class="col-4">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Frequency</span>
+                <input type="number" value="275" id="freq"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Z₀</span>
+                <input type="number" value="100" id="z0"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">Digits</span>
+                <input type="number" value="2" id="sig_digits"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4 justify-content-center">
+            <div class="col-5">
+              <div class="input-group">
+                <span class="input-group-text inputGroupmw">S11</span>
+                <input type="number" value="0" id="s11_re"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s11_re_label">+</span>
+                <input type="number" value="0" id="s11_im"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s11_im_label">j</span>
+              </div>
+            </div>
+
+            <div class="col-5">
+              <div class="input-group">
+                <span class="input-group-text inputGroupmw">S12</span>
+                <input type="number" value="0" id="s12_re"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s12_re_label">+</span>
+                <input type="number" value="0" id="s12_im"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s12_im_label">j</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2 justify-content-center">
+            <div class="col-5">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">S21</span>
+                <input type="number" value="0" id="s21_re"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s21_re_label">+</span>
+                <input type="number" value="0" id="s21_im"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s21_im_label">j</span>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="input-group mb-2">
+                <span class="input-group-text inputGroupmw">S22</span>
+                <input type="number" value="0" id="s22_re"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s22_re_label">+</span>
+                <input type="number" value="0" id="s22_im"
+                  class="form-control text-center" onchange="calcMatch()"
+                  autocomplete="off">
+                <span class="input-group-text" id="s22_im_label">j</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2 justify-content-center">
             <div class="col">
-              <div class="field">
-                <label class="form-label">Frequency (GHz)</label>
-                <input class="form-control text-center is-valid" type="text"
-                  pattern="[0-9]+" name="freq" id="freq"
-                  value="275" onkeyup="calcMatch()">
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="field">
-                <label class="form-label">Zo</label>
-                <input class="form-control text-center is-valid" type="text"
-                  pattern="[0-9]+" name="zo" id="zo"
-                  value="100" onkeyup="calcMatch()">
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="field">
-                <label class="form-label">Significant Digits</label>
-                <input class="form-control text-center is-valid" type="text"
-                  pattern="[0-9]+" name="sig_digits" id="sig_digits"
-                  value="2" onkeyup="calcMatch()">
-              </div>
-            </div>
-          </div>
-
-          <div class="row m-3">
-            <div class="col m-1">
-              <div class="field">
-                <label class="form-label" id="s11_re_label">S11 Real</label>
-                <input class="form-control text-center is-valid" type="text"
-                  pattern="-?[0-9]+(\.[0-9]*)?" name="s11_re" id="s11_re"
-                  onkeyup="calcMatch()">
-              </div>
-            </div>
-            <div class="col m-1">
-              <div class="field">
-                <label class="form-label" id="s11_im_label">S11
-                  Imaginary</label>
-                <input class="form-control text-center is-valid" type="text"
-                  pattern="-?[0-9]+(\.[0-9]*)?" name="s11_im" id="s11_im"
-                  onkeyup="calcMatch()">
-              </div>
-            </div>
-          </div>
-
-          <div class="row m-3">
-            <div class="col m-2">
-              <div class="field">
-                <label class="label" id="s12_re_label">S12 Real</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s12_re" id="s12_re"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
-            </div>
-            <div class="col m-2">
-              <div class="field">
-                <label class="label" id="s12_im_label">S12 Imaginary</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s12_im" id="s12_im"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row m-3">
-            <div class="col m-1">
-              <div class="field">
-                <label class="label" id="s21_re_label">S21 Real</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s21_re" id="s21_re"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
-            </div>
-            <div class="col m-1">
-              <div class="field">
-                <label class="label" id="s21_im_label">S21 Imaginary</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s21_im" id="s21_im"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row m-3">
-            <div class="col m-1">
-              <div class="field">
-                <label class="label" id="s22_re_label">S22 Real</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s22_re" id="s22_re"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
-            </div>
-            <div class="col m-1">
-              <div class="field">
-                <label class="label" id="s22_im_label">S22 Imaginary</label>
-                <div class="control">
-                  <input class="form-control text-center is-valid" type="text"
-                    pattern="-?[0-9]+(\.[0-9]*)?" name="s22_im" id="s22_im"
-                    onkeyup="calcMatch()">
-                </div>
-              </div>
+              <button type="button" class="btn btn-secondary"
+                onclick="calcMatch()">Calculate</button>
             </div>
           </div>
 
         </form>
 
-        <div class="bd-example-snippet bd-code-snippet">
-          <div class="bd-example m-0 border-0">
+        <div class="row mt-5 justify-content-center">
+          <div class="col-2">
+            <div class="input-group">
+              <span class="input-group-text">K</span>
+              <output class="form-control text-center" id="k_val">
+                <div class="text_box"></div>
+              </output>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group">
+              <span class="input-group-text">B1</span>
+              <output class="form-control text-center" id="b1_val">
+                <div class="text_box"></div>
+              </output>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="input-group">
+              <span class="input-group-text">MAG</span>
+              <output class="form-control text-center" id="mag_val">
+                <div class="text_box"></div>
+              </output>
+              <span class="input-group-text">dB</span>
+            </div>
+          </div>
+        </div>
 
-            <div class="accordion" id="accordionExample">
-
-              <div class="accordion-item">
-                <h4 class="accordion-header">
-                  <button class="accordion-button" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
-                    Stability
-                  </button>
-                </h4>
-                <div id="collapseOne"
-                  class="accordion-collapse collapse show"
-                  data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row mt-4">
-                      <div class="col m-2">
-                        <div class="column is-one-quarter">
-                          <div class="field">
-                            <label class="label">K</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="kval" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col m-2">
-                        <div class="column is-one-quarter">
-                          <div class="field">
-                            <label class="label">B1</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="b1val" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col m-2">
-                        <div class="column is-one-quarter">
-                          <div class="field">
-                            <label class="label">MAG (dB)</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="magval" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <div class="row mt-5 justify-content-center">
+          <div class="col-4 text-center">
+            <h5>Source</h5>
+            <div class="row mt-4">
+              <div class="input-group">
+                <span class="input-group-text">Γ</span>
+                <output class="form-control text-center"
+                  id="src_gamma_val">
+                  <div class="text_box"></div>
+                </output>
               </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">Z</span>
+                <output class="form-control text-center" id="src_z_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">R</span>
+                <output class="form-control text-center" id="src_r_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">C</span>
+                <output class="form-control text-center" id="src_c_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+          </div>
 
-              <div class="accordion-item">
-                <h4 class="accordion-header">
-                  <button class="accordion-button" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                    aria-expanded="false" aria-controls="collapseTwo">
-                    Gamma Matches
-                  </button>
-                </h4>
-                <div id="collapseTwo"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row m-2">
-                      <div class="col">
-                        <div class="field">
-                          <label class="label">Source Gamma Mag</label>
-                          <div class="control">
-                            <input class="input text-center"
-                              type="text" pattern="[0-9]+(\.[0-9]*)?"
-                              id="src_gamma_mag_val" value>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="field">
-                          <label class="label">Load Gamma Mag</label>
-                          <div class="control">
-                            <input class="input text-center"
-                              type="text" pattern="[0-9]+(\.[0-9]*)?"
-                              id="load_gamma_mag_val" value>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+          <div class="col-1"></div>
 
-                    <div class="row m-2">
-                      <div class="col">
-                        <div class="field">
-                          <label class="label">Source Gamma Angle (deg)</label>
-                          <div class="control">
-                            <input class="input text-center"
-                              type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                              id="src_gamma_ang_val" value>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="field">
-                          <label class="label">Load Gamma Angle (deg)</label>
-                          <div class="control">
-                            <input class="input text-center"
-                              type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                              id="load_gamma_ang_val" value>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item">
-                  <h4 class="accordion-header">
-                    <button class="accordion-button" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                      aria-expanded="false" aria-controls="collapseThree">
-                      Z Matches
-                    </button>
-                  </h4>
-                  <div id="collapseThree"
-                    class="accordion-collapse collapse"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="row m-2">
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Source Z Real</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="[0-9]+(\.[0-9]*)?"
-                                id="src_z_re_val" value>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Load Z Real</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="[0-9]+(\.[0-9]*)?"
-                                id="load_z_re_val" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row m-2">
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Source Z Imaginary</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="src_z_im_val" value>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Load Z Imagninary</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="load_z_im_val" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="accordion-item">
-                  <h4 class="accordion-header">
-                    <button class="accordion-button" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapseFour"
-                      aria-expanded="false" aria-controls="collapseFour">
-                      Parallel RC Matches
-                    </button>
-                  </h4>
-                  <div id="collapseFour"
-                    class="accordion-collapse collapse"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <div class="row m-2">
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Source R</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="[0-9]+(\.[0-9]*)?"
-                                id="src_r_val" value>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Load R</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="[0-9]+(\.[0-9]*)?"
-                                id="load_r_val" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row m-2">
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Source C (fF)</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="src_c_val" value>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="field">
-                            <label class="label">Load C (fF)</label>
-                            <div class="control">
-                              <input class="input text-center"
-                                type="text" pattern="-?[0-9]+(\.[0-9]*)?"
-                                id="load_c_val" value>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+          <div class="col-4 text-center">
+            <h5>Load</h5>
+            <div class="row mt-4">
+              <div class="input-group">
+                <span class="input-group-text">Γ</span>
+                <output class="form-control text-center"
+                  id="load_gamma_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">Z</span>
+                <output class="form-control text-center" id="load_z_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">R</span>
+                <output class="form-control text-center" id="load_r_val">
+                  <div class="text_box"></div>
+                </output>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="input-group">
+                <span class="input-group-text">C</span>
+                <output class="form-control text-center" id="load_c_val">
+                  <div class="text_box"></div>
+                </output>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+      </div>
+    </section>
 
-      <script src="./cheatsheet.js"></script>
-      <script src='./impedances.js'></script>
-      <script src='./validation.js'></script>
-    </body>
-  </html>
+    <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./cheatsheet.js"></script>
+    <script src='./impedances.js'></script>
+    <script src='./validation.js'></script>
+  </body>
+</html>

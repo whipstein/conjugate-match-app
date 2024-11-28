@@ -1,4 +1,4 @@
-document.querySelector('#num_format').addEventListener("change", function() { change_imp(); });
+// document.querySelector('#num_format').addEventListener("change", function() { change_imp(); });
 
 // function set_input_text(e, field) {
 //   e.preventDefault();
@@ -85,22 +85,22 @@ function validate_number(e, field) {
 // const number_format = document.getElementById("num_format");
 // number_format.addEventListener('focusout', (e) => set_input_text(e, "num_format"));
 
-const s11re = document.getElementById("s11_re");
-s11re.addEventListener('focusout', (e) => validate_number(e, "s11_re"));
-const s11im = document.getElementById("s11_im");
-s11im.addEventListener('focusout', (e) => validate_number(e, "s11_im"));
+// const s11re = document.getElementById("s11_re");
+// s11re.addEventListener('focusout', (e) => validate_number(e, "s11_re"));
+// const s11im = document.getElementById("s11_im");
+// s11im.addEventListener('focusout', (e) => validate_number(e, "s11_im"));
 
-const s12re = document.getElementById("s12_re");
-s12re.addEventListener('focusout', (e) => validate_number(e, "s12_re"));
-const s12im = document.getElementById("s12_im");
-s12im.addEventListener('focusout', (e) => validate_number(e, "s12_im"));
+// const s12re = document.getElementById("s12_re");
+// s12re.addEventListener('focusout', (e) => validate_number(e, "s12_re"));
+// const s12im = document.getElementById("s12_im");
+// s12im.addEventListener('focusout', (e) => validate_number(e, "s12_im"));
 
-const s21re = document.getElementById("s21_re");
-s21re.addEventListener('focusout', (e) => validate_number(e, "s21_re"));
-const s21im = document.getElementById("s21_im");
-s21im.addEventListener('focusout', (e) => validate_number(e, "s21_im"));
+// const s21re = document.getElementById("s21_re");
+// s21re.addEventListener('focusout', (e) => validate_number(e, "s21_re"));
+// const s21im = document.getElementById("s21_im");
+// s21im.addEventListener('focusout', (e) => validate_number(e, "s21_im"));
 
-const s22re = document.getElementById("s22_re");
-s22re.addEventListener('focusout', (e) => validate_number(e, "s22_re"));
-const s22im = document.getElementById("s22_im");
-s22im.addEventListener('focusout', (e) => validate_number(e, "s22_im"));
+// const s22re = document.getElementById("s22_re");
+// s22re.addEventListener('focusout', (e) => validate_number(e, "s22_re"));
+// const s22im = document.getElementById("s22_im");
+// s22im.addEventListener('focusout', (e) => validate_number(e, "s22_im"));
