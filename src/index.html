@@ -12,6 +12,8 @@
         font-size: 150%;
       }
     </style>
+    <script defer src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src='/main.js'></script>
   </head>
 
   <body class="bg-body-tertiary">
@@ -36,7 +38,7 @@
     </svg>
 
     <div
-      class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+      class="dropdown position-absolute bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
       <button
         class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
         id="bd-theme"
@@ -93,8 +95,7 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Frequency
                   Unit</span>
-                <select class="form-select" id="freq_unit"
-                  onchange="calcMatch()" autocomplete="off">
+                <select class="form-select" id="freq_unit" autocomplete="off">
                   <option value="tera">THz</option>
                   <option value="giga" selected>GHz</option>
                   <option value="mega">MHz</option>
@@ -106,8 +107,7 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Cap
                   Unit</span>
-                <select class="form-select" id="cap_unit"
-                  onchange="calcMatch()" autocomplete="off">
+                <select class="form-select" id="cap_unit" autocomplete="off">
                   <option value="milli">Milli</option>
                   <option value="micro">Micro</option>
                   <option value="nano">Nano</option>
@@ -119,8 +119,7 @@
             <div class="col-3">
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Format</span>
-                <select class="form-select" id="num_format"
-                  onchange="change_imp()" autocomplete="off">
+                <select class="form-select" id="imp_unit" autocomplete="off">
                   <option value="ri" selected>Re/Im</option>
                   <option value="ma">Mag/Ang</option>
                   <option value="db">dB/Ang</option>
@@ -134,8 +133,7 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Frequency</span>
                 <input type="number" value="275" id="freq"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
               </div>
             </div>
 
@@ -143,8 +141,7 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Z₀</span>
                 <input type="number" value="100" id="z0"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
               </div>
             </div>
 
@@ -152,8 +149,7 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">Digits</span>
                 <input type="number" value="2" id="sig_digits"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
               </div>
             </div>
           </div>
@@ -163,12 +159,10 @@
               <div class="input-group">
                 <span class="input-group-text inputGroupmw">S11</span>
                 <input type="number" value="0" id="s11_re"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s11_re_label">+</span>
                 <input type="number" value="0" id="s11_im"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s11_im_label">j</span>
               </div>
             </div>
@@ -177,12 +171,10 @@
               <div class="input-group">
                 <span class="input-group-text inputGroupmw">S12</span>
                 <input type="number" value="0" id="s12_re"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s12_re_label">+</span>
                 <input type="number" value="0" id="s12_im"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s12_im_label">j</span>
               </div>
             </div>
@@ -193,12 +185,10 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">S21</span>
                 <input type="number" value="0" id="s21_re"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s21_re_label">+</span>
                 <input type="number" value="0" id="s21_im"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s21_im_label">j</span>
               </div>
             </div>
@@ -206,12 +196,10 @@
               <div class="input-group mb-2">
                 <span class="input-group-text inputGroupmw">S22</span>
                 <input type="number" value="0" id="s22_re"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s22_re_label">+</span>
                 <input type="number" value="0" id="s22_im"
-                  class="form-control text-center" onchange="calcMatch()"
-                  autocomplete="off">
+                  class="form-control text-center" autocomplete="off">
                 <span class="input-group-text" id="s22_im_label">j</span>
               </div>
             </div>
@@ -220,7 +208,7 @@
           <div class="row mt-2 justify-content-center">
             <div class="col">
               <button type="button" class="btn btn-secondary"
-                onclick="calcMatch()">Calculate</button>
+                id="calc">Calculate</button>
             </div>
           </div>
 
@@ -335,10 +323,5 @@
       </div>
     </section>
 
-    <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="./cheatsheet.js"></script>
-    <script src='./impedances.js'></script>
-    <script src='./validation.js'></script>
   </body>
 </html>
