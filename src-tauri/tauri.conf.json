@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "conjugate-match-app",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "identifier": "com.conjugate-match-app.app",
   "build": {
     "frontendDist": "../src"
@@ -11,7 +11,7 @@
     "windows": [
       {
         "title": "conjugate-match-app",
-        "width": 900,
+        "width": 750,
         "height": 800,
         "devtools": true
       }

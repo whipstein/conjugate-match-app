@@ -1,58 +1,38 @@
 const { invoke } = window.__TAURI__.core;
-
-function digits(val, sd) {
-    return val.toFixed(sd);
-}
-  
-function print_unit(unit) {
-    if (unit == "milli") {
-        return "m";
-    } else if (unit == "micro") {
-        return "μ";
-    } else if (unit == "nano") {
-        return "n";
-    } else if (unit == "pico") {
-        return "p";
-    } else if (unit == "femto") {
-        return "f";
-    } else {
-        return "";
-    }
-}
-
-function print_val(val, unit, suffix, sd) {
-    if (Number.isFinite(val)) {
-        return "" + digits(val, sd) + " " + print_unit(unit) + suffix;
-    }
-    return "" + val;
-}
-
-let sigDigitsEl, modeUnitEl, capUnitEl, freqUnitEl, impUnitEl, z0El, freqEl, s11reLabelEl, s11imLabelEl, s12reLabelEl, s12imLabelEl, s21reLabelEl, s21imLabelEl, s22reLabelEl, s22imLabelEl, s11reEl, s11imEl, s12reEl, s12imEl, s21reEl, s21imEl, s22reEl, s22imEl, calcEl;
-let sd, cap_unit, freq_unit, imp_unit, z0, freq, s11re, s11im, s12re, s12im, s21re, s21im, s22re, s22im;
-let kEl, b1El, magEl, srcGammaEl, srcZEl, srcREl, srcCEl, loadGammaEl, loadZEl, loadREl, loadCEl;
+import {print_val, print_cval, complexCopy, rcCopy} from "/util.js";
 
 function calcMatch() {
     invoke("calc_match", { s11re: s11re, s11im: s11im, s12re: s12re, s12im: s12im, s21re: s21re, s21im: s21im, s22re: s22re, s22im: s22im, imp: imp_unit, z0: z0, freq: freq, fscale: freq_unit, cscale: cap_unit })
         .then((result) => {
             kEl.innerHTML = "<div class=\"text_box\">" + print_val(result.k, "", " </div>", sd);
             b1El.innerHTML = "<div class=\"text_box\">" + print_val(result.b1, "", " </div>", sd);
-            magEl.innerHTML = "<div class=\"text_box\">" + print_val(result.mag, "", " </div>", sd);
+            magEl.innerHTML = "<div class=\"text_box\">" + print_val(result.mag, "", "dB </div>", sd);
 
-            srcGammaEl.innerHTML = "<div class=\"text_box\">" + print_val(result.src.gamma_mag, "", " &angmsd; ", sd) + print_val(result.src.gamma_ang, "", "&deg; </div>", sd)
-            var txt = "<div class=\"text_box\">" + print_val(result.src.z_re, "", "", sd)
-            if (result.src.z_im < 0) txt += " - "
-            else txt += " + "
-            txt += print_val(Math.abs(result.src.z_im), "", "j Ω</div>", sd)
-            srcZEl.innerHTML = txt
+            current.src_gamma_mag = result.src.gamma.mag;
+            current.src_gamma_ang = result.src.gamma.ang;
+            current.src_gamma_re = result.src.gamma.re;
+            current.src_gamma_im = result.src.gamma.im;
+            current.src_z_re = result.src.z.re;
+            current.src_z_im = result.src.z.im;
+            current.src_r = result.src.r;
+            current.src_c = result.src.c;
+            srcGammaEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.src.gamma, "", "&deg; </div>", sd, "ma")
+            srcGammaRiEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.src.gamma, "", "&deg; </div>", sd, "ri")
+            srcZEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.src.z, "", "j Ω</div>", sd)
             srcREl.innerHTML = "<div class=\"text_box\">" + print_val(result.src.r, "", " Ω</div>", sd)
             srcCEl.innerHTML = "<div class=\"text_box\">" + print_val(result.src.c, cap_unit, "F</div>", sd)
 
-            loadGammaEl.innerHTML = "<div class=\"text_box\">" + print_val(result.load.gamma_mag, "", " &angmsd; ", sig_digits) + print_val(result.src.gamma_ang, "", "&deg; </div>", sd)
-            var txt = "<div class=\"text_box\">" + print_val(result.load.z_re, "", "", sd)
-            if (result.load.z_im < 0) txt += " - "
-            else txt += " + "
-            txt += print_val(Math.abs(result.load.z_im), "", "j Ω</div>", sd)
-            loadZEl.innerHTML = txt
+            current.load_gamma_mag = result.load.gamma.mag;
+            current.load_gamma_ang = result.load.gamma.ang;
+            current.load_gamma_re = result.load.gamma.re;
+            current.load_gamma_im = result.load.gamma.im;
+            current.load_z_re = result.load.z.re;
+            current.load_z_im = result.load.z.im;
+            current.load_r = result.load.r;
+            current.load_c = result.load.c;
+            loadGammaEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.load.gamma, "", "&deg; </div>", sd, "ma")
+            loadGammaRiEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.load.gamma, "", "&deg; </div>", sd, "ri")
+            loadZEl.innerHTML = "<div class=\"text_box\">" + print_cval(result.load.z, "", "j Ω</div>", sd)
             loadREl.innerHTML = "<div class=\"text_box\">" + print_val(result.load.r, "", " Ω</div>", sd)
             loadCEl.innerHTML = "<div class=\"text_box\">" + print_val(result.load.c, cap_unit, "F</div>", sd)
         })
@@ -93,6 +73,8 @@ function updateVals() {
 }
 
 function updateLabels() {
+    imp_unit = impUnitEl.value;
+
     let reLabel, imLabel;
 
     if (imp_unit == "ma" || imp_unit == "db") {
@@ -114,6 +96,30 @@ function updateLabels() {
     s22imLabelEl.innerHTML = imLabel;
 
     updateVals();
+}
+
+let sigDigitsEl, capUnitEl, freqUnitEl, impUnitEl, z0El, freqEl, s11reLabelEl, s11imLabelEl, s12reLabelEl, s12imLabelEl, s21reLabelEl, s21imLabelEl, s22reLabelEl, s22imLabelEl, s11reEl, s11imEl, s12reEl, s12imEl, s21reEl, s21imEl, s22reEl, s22imEl, calcEl;
+let sd, cap_unit, freq_unit, imp_unit, z0, freq, s11re, s11im, s12re, s12im, s21re, s21im, s22re, s22im;
+let kEl, b1El, magEl, srcGammaEl, srcGammaRiEl, srcZEl, srcREl, srcCEl, loadGammaEl, loadGammaRiEl, loadZEl, loadREl, loadCEl;
+let srcGammaCopyEl, srcGammaRiCopyEl, srcZCopyEl, srcRcCopyEl, loadGammaCopyEl, loadGammaRiCopyEl, loadZCopyEl, loadRcCopyEl;
+
+let current = {
+    src_gamma_mag: 0.0,
+    src_gamma_mag: 0.0,
+    src_gamma_re: 0.0,
+    src_gamma_im: 0.0,
+    src_z_re: 0.0,
+    src_z_im: 0.0,
+    src_r: 0.0,
+    src_c: 0.0,
+    load_gamma_mag: 0.0,
+    load_gamma_mag: 0.0,
+    load_gamma_re: 0.0,
+    load_gamma_im: 0.0,
+    load_z_re: 0.0,
+    load_z_im: 0.0,
+    load_r: 0.0,
+    load_c: 0.0,
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -140,20 +146,28 @@ window.addEventListener("DOMContentLoaded", () => {
     s22reEl = document.getElementById("s22_re");
     s22imEl = document.getElementById("s22_im");
     calcEl = document.getElementById("calc");
+    srcGammaCopyEl = document.getElementById("src_gamma_copy");
+    srcGammaRiCopyEl = document.getElementById("src_gamma_ri_copy");
+    srcZCopyEl = document.getElementById("src_z_copy");
+    srcRcCopyEl = document.getElementById("src_rc_copy");
+    loadGammaCopyEl = document.getElementById("load_gamma_copy");
+    loadGammaRiCopyEl = document.getElementById("load_gamma_ri_copy");
+    loadZCopyEl = document.getElementById("load_z_copy");
+    loadRcCopyEl = document.getElementById("load_rc_copy");
 
     kEl = document.getElementById("k_val");
     b1El = document.getElementById("b1_val");
     magEl = document.getElementById("mag_val");
     srcGammaEl = document.getElementById("src_gamma_val");
+    srcGammaRiEl = document.getElementById("src_gamma_ri_val");
     srcZEl = document.getElementById("src_z_val");
     srcREl = document.getElementById("src_r_val");
     srcCEl = document.getElementById("src_c_val");
     loadGammaEl = document.getElementById("load_gamma_val");
+    loadGammaRiEl = document.getElementById("load_gamma_ri_val");
     loadZEl = document.getElementById("load_z_val");
     loadREl = document.getElementById("load_r_val");
     loadCEl = document.getElementById("load_c_val");
-
-    updateVals();
 
     sigDigitsEl.addEventListener("change", (e) => {
         e.preventDefault();
@@ -228,5 +242,45 @@ window.addEventListener("DOMContentLoaded", () => {
     calcEl.addEventListener("click", (e) => {
         e.preventDefault();
         updateVals();
+    });
+
+    srcGammaCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(srcGammaCopyEl, current.src_gamma_mag, current.src_gamma_ang, sd);
+    });
+
+    srcGammaRiCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(srcGammaRiCopyEl, current.src_gamma_re, current.src_gamma_im, sd);
+    });
+
+    srcZCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(srcZCopyEl, current.src_z_re, current.src_z_im, sd);
+    });
+
+    srcRcCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        rcCopy(srcRcCopyEl, current.src_r, current.src_c, cap_unit, sd);
+    });
+
+    loadGammaCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(loadGammaCopyEl, current.load_gamma_mag, current.load_gamma_ang, sd);
+    });
+
+    loadGammaRiCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(loadGammaRiCopyEl, current.load_gamma_re, current.load_gamma_im, sd);
+    });
+
+    loadZCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        complexCopy(loadZCopyEl, current.load_z_re, current.load_z_im, sd);
+    });
+
+    loadRcCopyEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        rcCopy(loadRcCopyEl, current.load_r, current.load_c, cap_unit, sd);
     });
 });
